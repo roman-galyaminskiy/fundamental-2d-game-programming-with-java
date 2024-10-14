@@ -5,10 +5,10 @@ import javagames.util.FrameRate;
 import javax.swing.*;
 import java.awt.*;
 
-public class HelloWorldApp extends JFrame {
-    private FrameRate frameRate;
+public class PassiveRenderingExample extends JFrame {
+    private final FrameRate frameRate;
 
-    public HelloWorldApp() {
+    public PassiveRenderingExample() {
         frameRate = new FrameRate();
     }
 
@@ -35,11 +35,7 @@ public class HelloWorldApp extends JFrame {
     }
 
     public static void main( String[] args ) {
-        final HelloWorldApp app = new HelloWorldApp();
-        SwingUtilities.invokeLater( new Runnable() {
-            public void run() {
-                app.createAndShowGUI();
-            }
-        });
+        final PassiveRenderingExample app = new PassiveRenderingExample();
+        SwingUtilities.invokeLater(app::createAndShowGUI);
     }
 }

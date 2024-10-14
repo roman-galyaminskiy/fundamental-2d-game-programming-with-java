@@ -14,6 +14,7 @@ public class FrameRate {
     public void calculate() {
         long current = System.currentTimeMillis();
         delta += current - lastTime;
+        System.out.println(delta);
         lastTime = current;
         frameCount++;
         if (delta > 1000) {
