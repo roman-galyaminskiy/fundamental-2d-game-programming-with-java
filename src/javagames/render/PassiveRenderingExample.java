@@ -16,7 +16,7 @@ public class PassiveRenderingExample extends JFrame {
         GamePanel gamePanel = new GamePanel();
         gamePanel.setBackground( Color.BLACK );
         gamePanel.setPreferredSize( new Dimension( 320, 240 ) );
-        getContentPane().add( gamePanel );
+        add( gamePanel );
         setDefaultCloseOperation( EXIT_ON_CLOSE );
         setTitle( "Hello World!" );
         pack();
