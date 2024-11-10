@@ -39,11 +39,11 @@ public class FullScreenActiveRenderingExample extends JFrame implements Runnable
         running = true;
 
         while (running) {
-            gameLoop();
+            renderFrame();
         }
     }
 
-    public void gameLoop() {
+    private void renderFrame() {
         do {
             do {
                 Graphics g = null;

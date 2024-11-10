@@ -14,18 +14,18 @@ public class FrameRate {
     public void calculate() {
         long current = System.currentTimeMillis();
         delta += current - lastTime;
-        System.out.println(delta);
+        // System.out.println(delta);
         lastTime = current;
         frameCount++;
         if (delta > 1000) {
             delta -= 1000;
-            frameRate = String.format("FPS %s", frameCount);
+            // frameRate = String.format("FPS %s", frameCount);
             frameCount = 0;
         }
     }
 
     public String getFrameRate() {
-        System.out.println(frameRate);
+        // System.out.println(frameRate);
         return frameRate;
     }
 }
