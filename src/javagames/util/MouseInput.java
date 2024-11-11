@@ -11,7 +11,11 @@ public class MouseInput extends MouseInputAdapter {
     public static final int MOUSE_RIGHT_BUTTON = 2;
 
     public synchronized boolean isPressed(int buttonIndex) {
-        return keys[buttonIndex];
+        return polled[buttonIndex] > 1;
+    }
+
+    public synchronized boolean isPressedOnce(int buttonIndex) {
+        return polled[buttonIndex] == 1;
     }
 
     public synchronized Point getDragPosition() {
@@ -23,6 +27,7 @@ public class MouseInput extends MouseInputAdapter {
     }
 
     private boolean[] keys = new boolean[MOUSE_BUTTON_NAMES.length];
+    private int[] polled = new int[MOUSE_BUTTON_NAMES.length];
     private int rotations;
     private Point dragPosition = null;
 
@@ -30,15 +35,26 @@ public class MouseInput extends MouseInputAdapter {
     private Point lastPolledDragPosition = null;
 
     public synchronized void poll() {
-        lastPolledRotations = rotations;
-        rotations = 0;
         if (dragPosition != null) {
             lastPolledDragPosition = new Point(dragPosition);
+            System.out.println(lastPolledDragPosition);
+        }
+
+        lastPolledRotations = rotations;
+        rotations = 0;
+
+        for (int i = 0; i < MOUSE_BUTTON_NAMES.length; i++) {
+            if (keys[i]) {
+                polled[i]++;
+            } else {
+                polled[i] = 0;
+            }
         }
     }
 
     @Override
     public synchronized void mousePressed(MouseEvent e) {
+        dragPosition = e.getPoint();
         int button = e.getButton();
         if (button - 1 < MOUSE_BUTTON_NAMES.length) {
             keys[button - 1] = true;

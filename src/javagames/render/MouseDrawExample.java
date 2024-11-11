@@ -19,7 +19,8 @@ public class MouseDrawExample extends JFrame implements Runnable {
     private Thread gameThread;
     private final FrameRate frameRate = new FrameRate();
     private MouseInput mouseInput = new MouseInput();
-    private java.util.List<Point> currentLine = new ArrayList<>();
+    private ArrayList<Point> currentLine = new ArrayList<>();
+    private ArrayList<ArrayList<Point>> lines = new ArrayList<>();
     private String mouseButtonPressInfo = "Mouse buttons pressed: ";
     public static void main(String[] args) {
         final MouseDrawExample app = new MouseDrawExample();
@@ -33,6 +34,7 @@ public class MouseDrawExample extends JFrame implements Runnable {
     }
     private boolean prevLeftButtonState = false;
     private int lastDrawnPointIndex = 0;
+    private boolean isDrawing = false;
 
     @Override
     public void run() {
@@ -57,12 +59,28 @@ public class MouseDrawExample extends JFrame implements Runnable {
         }
         mouseButtonPressInfo = stringBuilder.toString();
 
-        if (mouseInput.isPressed(MOUSE_LEFT_BUTTON) || (!mouseInput.isPressed(MOUSE_LEFT_BUTTON) && prevLeftButtonState)) {
-            // System.out.println("test");
-            if (mouseInput.getDragPosition() != null) {
-                currentLine.add(mouseInput.getDragPosition());
+        if (mouseInput.isPressedOnce(MOUSE_LEFT_BUTTON)) {
+            isDrawing = true;
+            System.out.println(mouseInput.getDragPosition());
+        }
+
+        if (mouseInput.isPressed(MOUSE_LEFT_BUTTON)) {
+            Point position = mouseInput.getDragPosition();
+            if (position != null) {
+                if (currentLine.isEmpty() || !position.equals(currentLine.getLast())) {
+                    currentLine.add(mouseInput.getDragPosition());
+                }
             }
-            System.out.println(currentLine.size());
+        } else {
+            if (isDrawing) {
+                lines.add(currentLine);
+                currentLine = new ArrayList<>();
+                lastDrawnPointIndex = 0;
+                // System.out.println("stop");
+                // System.out.println(lines.size());
+                // System.out.println(currentLine);
+                isDrawing = false;
+            }
         }
 
         prevLeftButtonState = mouseInput.isPressed(MOUSE_LEFT_BUTTON);
@@ -92,6 +110,12 @@ public class MouseDrawExample extends JFrame implements Runnable {
         g.setColor(Color.GREEN);
         g.drawString(frameRate.getFrameRate(), 30, 30);
         g.drawString(mouseButtonPressInfo, 30, 40);
+
+        for (var line : lines) {
+            for (int i = 0; i < line.size() - 1; i++) {
+                g.drawLine(line.get(i).x, line.get(i).y, line.get(i + 1).x, line.get(i + 1).y);
+            }
+        }
 
         // System.out.printf("%s %s%n", currentLine.size(), lastDrawnPointIndex);
         if (currentLine.size() > lastDrawnPointIndex) {
